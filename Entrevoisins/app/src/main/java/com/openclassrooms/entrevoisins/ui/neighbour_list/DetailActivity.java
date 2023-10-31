@@ -2,15 +2,12 @@ package com.openclassrooms.entrevoisins.ui.neighbour_list;
 
 import android.content.Intent;
 import android.os.Bundle;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.openclassrooms.entrevoisins.R;
 import com.openclassrooms.entrevoisins.di.DI;
 import com.openclassrooms.entrevoisins.model.Neighbour;
@@ -22,12 +19,10 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
         ImageView backArrow = findViewById(R.id.backArrow);
-
         TextView textName = findViewById(R.id.neightbourName);
         TextView textLocation = findViewById(R.id.location);
         TextView textNumber = findViewById(R.id.phoneNumber);
@@ -36,7 +31,6 @@ public class DetailActivity extends AppCompatActivity {
         ImageView headerImage = findViewById(R.id.headerImage);
         Intent intent = getIntent();
         FloatingActionButton favoriteButton = findViewById(R.id.favoriteButton);
-
 
         if (intent != null) {
             long neighbourId = intent.getLongExtra(NEIGHBOUR_ID, 0L); // 0 is the default value if no value is passed
@@ -47,8 +41,9 @@ public class DetailActivity extends AppCompatActivity {
             textNetwork.setText(String.format("www.facebook.fr/%s", neighbour.getName()));
             textAboutMe.setText(neighbour.getAboutMe());
             Picasso.get().load(neighbour.getAvatarUrl()).into(headerImage);
-        }
 
+            updateFavoriteIcon(favoriteButton);
+        }
 
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,15 +51,25 @@ public class DetailActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
         favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (neighbour.isFavorite()) {
                     DI.getNeighbourApiService().deleteFavoriteNeighbour(neighbour);
                 } else {
-                    // DI.getNeighbourApiService().
+                    DI.getNeighbourApiService().addFavoriteNeighbour(neighbour);
                 }
+                updateFavoriteIcon(favoriteButton);
             }
         });
+    }
+
+    private void updateFavoriteIcon(FloatingActionButton button) {
+        if (neighbour.isFavorite()) {
+            button.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_star_white_24dp));
+        } else {
+            button.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.baseline_location_on_24));
+        }
     }
 }

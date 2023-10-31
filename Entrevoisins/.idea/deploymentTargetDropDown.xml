@@ -5,6 +5,18 @@
       <entry key="app">
         <State />
       </entry>
+      <entry key="isDetailActivityCorrect()">
+        <State />
+      </entry>
+      <entry key="isDetailLaunched()">
+        <State />
+      </entry>
+      <entry key="isItOnlyFavoriteNeighbours()">
+        <State />
+      </entry>
+      <entry key="myNeighboursList_deleteAction_shouldRemoveItem()">
+        <State />
+      </entry>
     </value>
   </component>
 </project>
